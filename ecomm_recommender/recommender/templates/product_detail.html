@@ -1,0 +1,44 @@
+
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+<head>
+    <title>{{ product.name }}</title>
+    <link rel="stylesheet" href="{% static 'recommender/css/styles.css' %}">
+
+</head>
+<body style="margin-top: 10px;">
+<div class="detail-container">
+    <div class="card">
+                <img class="product--image" src="{{product.image_url}}"   alt="image">
+                <h2><a href="{% url 'product_detail' product.id %}">{{ product.name }}</a></h2>
+                <p>{{ product.description|truncatewords:20 }}</p>
+                <p class="price">{{product.price}}</p>
+                <p><strong>Source:</strong> {{ product.source }}</p>
+                
+     </div>
+
+
+</div>  
+<hr> 
+
+   <h2>Recommended Products</h2>
+  <div class="card-container">
+{% if recommendations %}
+    {% for recommended in recommendations %}
+        <div class="card">
+            <h3><a href="{% url 'product_detail' recommended.id %}">{{ recommended.name }}</a></h3>
+
+            <!-- Product Image -->
+            <img src="{{ recommended.image_url }}" alt="{{ recommended.name }}" style="max-width: 200px; height: auto; border-radius: 8px; margin: 10px 0;">
+
+            <p>{{ recommended.description|truncatewords:25 }}</p>
+            <p><strong>Source:</strong> {{ recommended.source }}</p>
+        </div>
+    {% endfor %}
+{% else %}
+    <p>No recommendations available.</p>
+{% endif %}
+</div>
+</body>
+</html>

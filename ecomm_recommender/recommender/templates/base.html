@@ -1,0 +1,44 @@
+
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{% block title %}Product Recommender{% endblock %}</title>
+    <link rel="stylesheet" href="{% static 'recommender/css/styles.css' %}">
+</head>
+<body>
+
+    <header>
+          <nav class="nav">
+             <h5 class="logo"><a href="{% url 'product_list' %}"><img src="{% static 'images/logo.jpg'%}" height="70px" alt=""></a></h5>
+            <ul class="nav-group">
+                <li class="nav-item"><a href="">Home</a></li>
+                <li class="nav-item"><a href="">about</a></li>
+                <li class="nav-item"><a href="">Feedbacks</a></li>
+                <li class="nav-item"><a href="">Our Branches</a></li>
+                <li class="nav-item"><a href="">Contact us</a></li>
+            </ul>
+            <div class="reg">
+                <button>Register</button>
+                <button>Login</button>
+            </div>
+        </nav>
+       <div class="head">
+         <h1>Hybrid Sales</a></h1>
+       </div>
+      
+    </header>
+
+    <main>
+        {% block content %}
+        <!-- Page-specific content will go here -->
+        {% endblock %}
+    </main>
+
+    <footer>
+        <p>&copy; 2025 Product Recommender App. All rights reserved.</p>
+    </footer>
+<script src="{% static 'recommender/js/script.js' %}"></script>
+</body>
+</html>

@@ -32,7 +32,7 @@ ALLOWED_HOSTS = []
 
 INSTALLED_APPS = [
     'rest_framework',
-    'recommender',
+    'ecomm_recommender.recommender',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',

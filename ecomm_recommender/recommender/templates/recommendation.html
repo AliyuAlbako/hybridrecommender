@@ -1,0 +1,28 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Recommended Products</title>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
+<body>
+    <h1>Recommended Products</h1>
+
+    {% if recommendations %}
+        <ul>
+            {% for product in recommendations %}
+                <li>
+                    <strong>{{ product.name }}</strong> <br>
+                    {{ product.description }} <br>
+                    Source: {{ product.source }}
+                </li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p>No recommendations available for this product.</p>
+    {% endif %}
+
+    <a href="/">← Back to Product List</a>
+</body>
+</html>

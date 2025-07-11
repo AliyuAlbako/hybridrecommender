@@ -51,7 +51,9 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
-ROOT_URLCONF = 'ecomm_recommender.urls'
+
+ROOT_URLCONF = 'ecomm_recommender.ecomm_recommender.urls'
+
 
 TEMPLATES = [
     {

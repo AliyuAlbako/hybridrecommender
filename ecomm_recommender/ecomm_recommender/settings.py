@@ -33,7 +33,7 @@ ALLOWED_HOSTS = ['hybridrecommender.onrender.com', 'localhost', '127.0.0.1']
 
 INSTALLED_APPS = [
     'rest_framework',
-    'ecomm_recommender.recommender',
+    'recommender',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',

@@ -1,5 +1,5 @@
 """
-WSGI config for ecomm_recommender project.
+WSGI config for ecomm_recommend project.
 
 It exposes the WSGI callable as a module-level variable named ``application``.
 
@@ -11,6 +11,6 @@ import os
 
 from django.core.wsgi import get_wsgi_application
 
-os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'ecomm_recommender.settings')
+os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'ecomm_recommend.settings')
 
 application = get_wsgi_application()

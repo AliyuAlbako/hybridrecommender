@@ -7,10 +7,10 @@ services:
       cd ecomm_recommender
       pip install -r ../requirements.txt
       python manage.py collectstatic --noinput
-    startCommand: gunicorn ecomm_recommend.wsgi:application --log-file -
+    startCommand: gunicorn ecomm_recommender.wsgi:application --log-file -
     envVars:
       - key: DJANGO_SETTINGS_MODULE
-        value: ecomm_recommend.settings
+        value: ecomm_recommender.settings
       - key: PYTHON_VERSION
         value: 3.12.0
     autoDeploy: true

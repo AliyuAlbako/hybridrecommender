@@ -13,5 +13,4 @@ services:
         value: ecomm_recommender.settings
       - key: PYTHON_VERSION
         value: 3.13
-    staticPublishPath: ecomm_recommender/staticfiles
     autoDeploy: true

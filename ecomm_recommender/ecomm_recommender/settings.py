@@ -25,15 +25,22 @@ SECRET_KEY = 'django-insecure-h_dz-t(o-lh%gjw59bw_78%b=7)92(4ly_iyfkjxx0rr35i)(q
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-# ALLOWED_HOSTS = ['*']
+ALLOWED_HOSTS = ['*']
 ALLOWED_HOSTS = ['hybridrecommender.onrender.com', 'localhost', '127.0.0.1']
+
+CORS_ALLOWED_ORIGINS = [
+    "http://localhost:5173",   # React dev server
+    "http://127.0.0.1:5173",
+]
 
 
 # Application definition
 
 INSTALLED_APPS = [
+    "corsheaders",
     'rest_framework',
-    'ecomm_recommender.recommender',
+    'rest_framework_simplejwt',
+    'recommender',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -42,7 +49,15 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
 ]
 
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+    )
+}
+
 MIDDLEWARE = [
+     "corsheaders.middleware.CorsMiddleware",
+    "django.middleware.common.CommonMiddleware",
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -53,7 +68,7 @@ MIDDLEWARE = [
 ]
 
 
-ROOT_URLCONF = 'ecomm_recommender.ecomm_recommender.urls'
+ROOT_URLCONF = 'ecomm_recommender.urls'
 
 
 TEMPLATES = [

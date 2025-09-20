@@ -1,0 +1,34 @@
+[
+  {
+    "name": "iPhone 14 Pro",
+    "description": "Latest Apple smartphone with ProMotion display and A16 Bionic chip.",
+    "price": 1099.99,
+    "image_url": "https://via.placeholder.com/200x200.png?text=iPhone+14+Pro",
+    "source": "Apple Store",
+    "category": "Electronics"
+  },
+  {
+    "name": "Adidas Ultraboost",
+    "description": "High-performance running shoes with responsive cushioning.",
+    "price": 180.00,
+    "image_url": "https://via.placeholder.com/200x200.png?text=Adidas+Ultraboost",
+    "source": "Adidas Shop",
+    "category": "Fashion"
+  },
+  {
+    "name": "Andriod Smartwatch",
+    "description": "White SmartWatch.",
+    "price": 2.99,
+    "image_url": "https://images.unsplash.com/photo-1523275335684-37898b6baf30?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=60\n",
+    "source": "Whole",
+    "category": "Fashion"
+  },
+  {
+    "name": "Mac Book",
+    "description": "Mac Book and Watch",
+    "price": 2.99,
+    "image_url": "https://sources.unsplash.com/Bs-zngH79Ds",
+    "source": "Whole",
+    "category": "Fashion"
+  }
+]

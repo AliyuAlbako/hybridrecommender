@@ -7,6 +7,7 @@ import Signup from "./components/Signup";
 import Login from "./components/Login";
 import Dashboard from "./components/Dashboard";
 import ProtectedRoute from "./components/ProtectedRoute";
+import Cart from "./components/Cart";
 
 export default function App() {
   return (
@@ -18,6 +19,9 @@ export default function App() {
           <Route path="/product/:id" element={<ProductDetail />} />
           <Route path="/signup" element={<Signup />} />
           <Route path="/login" element={<Login />} />
+          <Route path="/cart" element={<ProtectedRoute><Cart /></ProtectedRoute>} />
+          <Route path="/cart" element={<Cart />} />
+
           <Route
             path="/dashboard"
             element={

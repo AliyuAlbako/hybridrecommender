@@ -1,0 +1,18 @@
+.star-rating {
+  display: flex;
+  gap: 2px;
+  margin: 6px 0;
+}
+
+.star {
+  font-size: 18px;
+  color: #ccc; /* default gray */
+}
+
+.star.filled {
+  color: #f5b301; /* gold */
+}
+
+.star.half {
+  color: #f5d67a; /* lighter gold for half */
+}

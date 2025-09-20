@@ -1,30 +1,41 @@
+import json
+import os
 from django.core.management.base import BaseCommand
 from recommender.models import Product
-from faker import Faker
-import random
 
 class Command(BaseCommand):
-    help = 'Seed the database with fake product data.'
+    help = "Seed the database with products from a JSON file"
 
     def add_arguments(self, parser):
-        parser.add_argument('total', type=int, help='Indicates the number of products to be created')
+        parser.add_argument(
+            '--file',
+            type=str,
+            help='Path to the JSON file containing products'
+        )
 
-    def handle(self, *args, **kwargs):
-        total = kwargs['total']
-        fake = Faker()
+    def handle(self, *args, **options):
+        file_path = options['file']
+        if not file_path:
+            self.stdout.write(self.style.ERROR("Please provide a JSON file path using --file"))
+            return
 
-        categories = ['Electronics', 'Computers', 'Fashion', 'Home', 'Books', 'Beauty', 'Toys']
-        sources = ['Internal', 'External', 'Affiliate']
+        if not os.path.exists(file_path):
+            self.stdout.write(self.style.ERROR(f"File not found: {file_path}"))
+            return
 
-        for _ in range(total):
-            Product.objects.create(
-                name=fake.unique.word().capitalize() + " " + fake.word().capitalize(),
-                category=random.choice(categories),
-                description=fake.paragraph(nb_sentences=5),
-                price=round(random.uniform(10.00, 2000.00), 2),
-                image_url=fake.image_url(),
-                source=random.choice(sources),
-                product_url=fake.url()
+        with open(file_path, 'r', encoding='utf-8') as f:
+            products = json.load(f)
+
+        created_count = 0
+        for prod in products:
+            Product.objects.get_or_create(
+                name=prod.get("name", ""),
+                description=prod.get("description", ""),
+                price=prod.get("price", 0.0),
+                image_url=prod.get("image_url", ""),
+                source=prod.get("source", "Unknown"),
+                category=prod.get("category", "General")
             )
+            created_count += 1
 
-        self.stdout.write(self.style.SUCCESS(f'Successfully added {total} fake products.'))
+        self.stdout.write(self.style.SUCCESS(f"Seeded {created_count} products from {file_path}"))

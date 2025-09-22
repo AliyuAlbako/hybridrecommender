@@ -2,6 +2,8 @@
 from django.urls import path
 from . import views
 from django.urls import path
+
+from .order_views import OrderListView
 from .views_auth import RegisterView, LoginView
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 from . import api_views
@@ -36,5 +38,7 @@ urlpatterns = [
     path("cart/<int:item_id>/", UpdateCartItemView.as_view(), name="cart_item_update"),
     path("cart/clear/", ClearCartView.as_view(), name="cart_clear"),
     path("cart/checkout/", CheckoutView.as_view(), name="cart_checkout"),
+    # order url
+    path("orders/", OrderListView.as_view(), name="orders"),
 
 ]

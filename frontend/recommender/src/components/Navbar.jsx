@@ -1,3 +1,4 @@
+// src/components/Navbar.jsx
 import React from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useCart } from "../context/CartContext";
@@ -22,37 +23,45 @@ const Navbar = () => {
         display: "flex",
         justifyContent: "space-between",
         alignItems: "center",
-        boxShadow: "0 2px 5px rgba(0,0,0,0.1)",
+        borderBottom: "1px solid #eee",
       }}
     >
-      {/* Logo / App Name */}
       <div>
-        <Link
-          to="/"
-          style={{ fontWeight: 700, fontSize: "18px", textDecoration: "none" }}
-        >
+        <Link to="/" style={{ fontWeight: 700, fontSize: "18px" }}>
           Hybrid Recommender
         </Link>
       </div>
 
-      {/* Links */}
-      <div style={{ display: "flex", gap: "16px", alignItems: "center" }}>
+      <div style={{ display: "flex", gap: "15px", alignItems: "center" }}>
         <Link to="/">Products</Link>
-        <Link to="/cart">🛒 Cart ({cartCount})</Link>
-
         {isLoggedIn ? (
           <>
             <Link to="/dashboard">Dashboard</Link>
-            <button
-              onClick={handleLogout}
-              style={{
-                padding: "6px 10px",
-                border: "1px solid #ccc",
-                borderRadius: "4px",
-                background: "#f8f8f8",
-                cursor: "pointer",
-              }}
-            >
+
+            {/* ✅ Cart with badge */}
+            <Link to="/cart" style={{ position: "relative" }}>
+              🛒 Cart
+              {cartCount > 0 && (
+                <span
+                  style={{
+                    position: "absolute",
+                    top: "-6px",
+                    right: "-12px",
+                    background: "red",
+                    color: "white",
+                    borderRadius: "50%",
+                    padding: "2px 7px",
+                    fontSize: "12px",
+                    fontWeight: "bold",
+                  }}
+                >
+                  {cartCount}
+                </span>
+              )}
+            </Link>
+
+            <Link to="/orders">My Orders</Link>
+            <button onClick={handleLogout} style={{ padding: "6px 10px" }}>
               Logout
             </button>
           </>

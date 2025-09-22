@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import api from "../api";
 import ProductCard from "./ProductCard";
+import StarRating from "./StarRating"; // ⭐ Import star rating component
 
 export default function ProductDetail() {
   const { id } = useParams();
@@ -27,7 +28,6 @@ export default function ProductDetail() {
 
   async function fetchRecommendations() {
     try {
-      // Endpoint expected to return list of products
       const res = await api.get(`/api/products/${id}/recommendations/`);
       setRecommendations(res.data.recommendations || res.data);
     } catch (err) {
@@ -42,7 +42,7 @@ export default function ProductDetail() {
         value: 1.0
       });
     } catch (err) {
-      // ignore failure if endpoint absent
+      // ignore failure
     }
   }
 
@@ -52,6 +52,7 @@ export default function ProductDetail() {
       await api.post(`/api/products/${id}/rate/`, { rating: Number(rating) });
       alert("Thanks for rating!");
       setRating("");
+      fetchDetail(); // refresh product to update avg rating
     } catch (err) {
       console.error(err);
     }
@@ -60,17 +61,38 @@ export default function ProductDetail() {
   if (!product) return <p>Loading product...</p>;
 
   return (
-    <div>
-      <div className="card" style={{ maxWidth: 800 }}>
-        <img src={product.image_url || "/images/placeholder.png"} alt={product.name} className="product--image" />
-        <h2>{product.name}</h2>
-        <p>{product.description}</p>
-        <p className="price">{product.price}</p>
-        <p><strong>Source:</strong> {product.source}</p>
+    <div className="detail-page">
+      <div className="detail-card">
+        <img
+          src={product.image_url || "/images/placeholder.png"}
+          alt={product.name}
+          className="detail-image"
+        />
+        <div className="detail-info">
+          <h2>{product.name}</h2>
+          <p className="detail-description">{product.description}</p>
+          <p className="price">₦{product.price}</p>
 
-        <div style={{ marginTop: 12 }}>
-          <input type="number" min="1" max="5" value={rating} onChange={(e) => setRating(e.target.value)} placeholder="Rate 1-5" />
-          <button onClick={submitRating}>Submit Rating</button>
+          {/* ⭐ Show average rating */}
+          <div className="rating-display">
+            <StarRating rating={product.avg_rating || 0} />
+            <span className="rating-text">
+              {product.avg_rating ? product.avg_rating.toFixed(1) : "No ratings yet"}
+            </span>
+          </div>
+
+          {/* ⭐ Rating form */}
+          <div className="rating-form">
+            <input
+              type="number"
+              min="1"
+              max="5"
+              value={rating}
+              onChange={(e) => setRating(e.target.value)}
+              placeholder="Rate 1-5"
+            />
+            <button onClick={submitRating}>Submit Rating</button>
+          </div>
         </div>
       </div>
 
@@ -78,7 +100,9 @@ export default function ProductDetail() {
 
       <h3>Recommended products</h3>
       <div className="card-container">
-        {recommendations.length ? recommendations.map(rec => <ProductCard key={rec.id} product={rec} />) : <p>No recommendations.</p>}
+        {recommendations.length
+          ? recommendations.map((rec) => <ProductCard key={rec.id} product={rec} />)
+          : <p>No recommendations.</p>}
       </div>
     </div>
   );

@@ -136,6 +136,7 @@ export default function ProductDetail() {
                 target="_blank"
                 rel="noreferrer"
                 className="card-button"
+                style={{color: "white"}}
               >
                 View on {rec.platform}
               </a>

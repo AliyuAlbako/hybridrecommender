@@ -9,6 +9,8 @@ import Dashboard from "./components/Dashboard";
 import ProtectedRoute from "./components/ProtectedRoute";
 import Cart from "./components/Cart";
 import Orders from "./components/Orders";
+import Evaluation from "./components/Evaluation";
+
 
 export default function App() {
   return (
@@ -25,6 +27,7 @@ export default function App() {
           <Route path="/orders"element={<ProtectedRoute><Orders /></ProtectedRoute>}/>
           <Route path="/dashboard" element={<ProtectedRoute> <Dashboard /></ProtectedRoute> } />
            <Route path="/orders"element={<ProtectedRoute><Orders /></ProtectedRoute>}/>
+           <Route path="/evaluation" element={<Evaluation />} />
         </Routes> 
      </main>
   </Router>

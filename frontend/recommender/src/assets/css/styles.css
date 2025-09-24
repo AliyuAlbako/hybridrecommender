@@ -331,4 +331,26 @@ a {
   font-weight: 500;
 }
 
+/* evaluaton css */
+
+.evaluation-page {
+  padding: 20px;
+}
+
+.metrics-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 1rem;
+}
+
+.metrics-table th,
+.metrics-table td {
+  border: 1px solid #ddd;
+  padding: 8px;
+}
+
+.metrics-table th {
+  background-color: #f4f4f4;
+  text-align: left;
+}
 

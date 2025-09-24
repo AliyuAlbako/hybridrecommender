@@ -7,6 +7,8 @@ import Signup from "./components/Signup";
 import Login from "./components/Login";
 import Dashboard from "./components/Dashboard";
 import ProtectedRoute from "./components/ProtectedRoute";
+import Cart from "./components/Cart";
+import Orders from "./components/Orders";
 
 export default function App() {
   return (
@@ -18,16 +20,13 @@ export default function App() {
           <Route path="/product/:id" element={<ProductDetail />} />
           <Route path="/signup" element={<Signup />} />
           <Route path="/login" element={<Login />} />
-          <Route
-            path="/dashboard"
-            element={
-              <ProtectedRoute>
-                <Dashboard />
-              </ProtectedRoute>
-            }
-          />
-        </Routes>
-      </main>
-    </Router>
+          <Route path="/cart" element={<ProtectedRoute><Cart /></ProtectedRoute>} />
+          <Route path="/cart" element={<Cart />} />
+          <Route path="/orders"element={<ProtectedRoute><Orders /></ProtectedRoute>}/>
+          <Route path="/dashboard" element={<ProtectedRoute> <Dashboard /></ProtectedRoute> } />
+           <Route path="/orders"element={<ProtectedRoute><Orders /></ProtectedRoute>}/>
+        </Routes> 
+     </main>
+  </Router>
   );
 }

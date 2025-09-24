@@ -1,29 +1,47 @@
 from django.contrib.auth.models import User
-from rest_framework import generics, permissions
 from rest_framework.response import Response
-from rest_framework import status
-from rest_framework.serializers import ModelSerializer
+from rest_framework import generics, permissions, status, serializers
+from rest_framework.serializers import ModelSerializer, CharField
 from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework_simplejwt.views import TokenObtainPairView
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
+from .models import UserProfile
 
 # =========================
 # Register Serializer
 # =========================
+# recommender/auth_views.py
+
+
+
+# recommender/auth_views.py
+from .models import UserProfile
+
 class RegisterSerializer(ModelSerializer):
     class Meta:
         model = User
-        fields = ['username', 'email', 'password']
-        extra_kwargs = {'password': {'write_only': True}}
+        fields = ['username', 'email', 'password', 'hobby', 'interest']
+        extra_kwargs = {
+            'password': {'write_only': True},
+            'hobby': {'required': False},
+            'interest': {'required': False},
+        }
+
+    hobby = serializers.CharField(required=False, allow_blank=True)
+    interest = serializers.CharField(required=False, allow_blank=True)
 
     def create(self, validated_data):
+        hobby = validated_data.pop("hobby", "")
+        interest = validated_data.pop("interest", "")
+
         user = User.objects.create_user(
             username=validated_data['username'],
             email=validated_data.get('email'),
             password=validated_data['password']
         )
+        # create user profile automatically
+        UserProfile.objects.create(user=user, hobby=hobby, interest=interest)
         return user
-
 
 # =========================
 # Register View
@@ -62,3 +80,172 @@ class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
 # =========================
 class LoginView(TokenObtainPairView):
     serializer_class = CustomTokenObtainPairSerializer
+
+class UserProfileSerializer(ModelSerializer):
+    class Meta:
+        model = UserProfile
+        fields = ["hobby", "interest"]
+
+class UserProfileView(generics.RetrieveUpdateAPIView):
+    serializer_class = UserProfileSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get_object(self):
+        return self.request.user.profile
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

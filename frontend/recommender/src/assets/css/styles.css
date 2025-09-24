@@ -65,3 +65,270 @@ a {
     border-radius:6px; 
     text-decoration:none;
     }
+
+
+/* Rating componen */
+
+.star-rating {
+  display: flex;
+  gap: 2px;
+  margin: 6px 0;
+}
+
+.star {
+  font-size: 18px;
+  color: #ccc; /* default gray */
+}
+
+.star.filled {
+  color: #f5b301; /* gold */
+}
+
+.star.half {
+  color: #f5d67a; /* lighter gold for half */
+}
+
+
+/* ProductList.css */
+
+.product-list-container {
+  padding: 20px;
+  background-color: #f9f9f9;
+  min-height: 100vh;
+}
+
+.product-list-container h1 {
+  font-size: 26px;
+  font-weight: 600;
+  margin-bottom: 15px;
+  color: #333;
+}
+
+.search-box {
+  margin-bottom: 25px;
+  display: flex;
+  justify-content: center;
+}
+
+.search-box input {
+  width: 300px;
+  padding: 10px 12px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  font-size: 15px;
+}
+
+.card-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: 20px;
+}
+
+.card {
+  background: #fff;
+  border-radius: 10px;
+  padding: 16px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 6px 14px rgba(0, 0, 0, 0.12);
+}
+
+.card img {
+  width: 100%;
+  height: 180px;
+  object-fit: cover;
+  border-radius: 8px;
+  margin-bottom: 12px;
+}
+
+.card h3 {
+  font-size: 18px;
+  font-weight: 600;
+  margin: 8px 0;
+  color: #0077cc;
+}
+
+.card p {
+  font-size: 14px;
+  color: #555;
+  margin: 6px 0;
+}
+
+.price {
+  font-size: 16px;
+  font-weight: bold;
+  color: #28a745;
+  margin-top: 5px;
+}
+
+.card-buttons {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 12px;
+}
+
+.card-button {
+  flex: 1;
+  margin-right: 8px;
+  padding: 8px;
+  font-size: 14px;
+  font-weight: 500;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.card-button.view {
+  background: #0077cc;
+  color: #fff;
+}
+
+.card-button.view:hover {
+  background: #005fa3;
+}
+
+.card-button.cart {
+  background: #28a745;
+  color: #fff;
+}
+
+.card-button.cart:hover {
+  background: #1f8a34;
+}
+
+/* Star Rating Css */
+.star-rating {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.star {
+  font-size: 18px;
+  color: #ccc;
+}
+
+.star.filled {
+  color: gold;
+}
+
+.rating-text {
+  font-size: 14px;
+  color: #555;
+  margin-left: 6px;
+}
+
+
+/* Product detail css */
+
+.detail-page {
+  padding: 20px;
+}
+
+.detail-card {
+  display: flex;
+  gap: 20px;
+  border: 1px solid #ddd;
+  border-radius: 12px;
+  background: #fff;
+  padding: 20px;
+  margin-bottom: 20px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+}
+
+.detail-image {
+  max-width: 280px;
+  border-radius: 10px;
+}
+
+.detail-info {
+  flex: 1;
+}
+
+.detail-description {
+  margin: 10px 0;
+  line-height: 1.5;
+  color: #333;
+}
+
+.price {
+  color: #2a9d8f;
+  font-weight: bold;
+  margin: 8px 0;
+}
+
+.rating-display {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 10px 0;
+}
+
+.rating-text {
+  font-size: 14px;
+  color: #555;
+}
+
+.rating-form {
+  margin-top: 10px;
+  display: flex;
+  gap: 10px;
+}
+
+.rating-form input {
+  width: 70px;
+  padding: 5px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+}
+
+.rating-form button {
+  padding: 6px 12px;
+  border: none;
+  border-radius: 6px;
+  background: #2a9d8f;
+  color: #fff;
+  cursor: pointer;
+}
+
+.rating-form button:hover {
+  background: #21867a;
+}
+
+
+/* external card css*/
+.external-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 16px;
+  margin-top: 12px;
+}
+
+.external-card {
+  border: 1px solid #ddd;
+  padding: 12px;
+  border-radius: 6px;
+  background: #fff;
+  text-align: center;
+}
+
+.external-card img {
+  max-width: 100%;
+  height: 140px;
+  object-fit: contain;
+}
+
+.external-card a {
+  display: inline-block;
+  margin-top: 8px;
+  color: #007bff;
+  text-decoration: none;
+  font-weight: 500;
+}
+
+

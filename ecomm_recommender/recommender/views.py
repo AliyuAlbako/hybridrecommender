@@ -42,24 +42,52 @@ def product_detail(request, product_id):
 
 
 # API endpoint for hybrid recommendations (JSON)
+# recommender/views.py
+
+
+
+
 def api_hybrid_recommendations(request, product_id):
-    recs = get_hybrid_recommendations(None, product_id, top_n=8, alpha=0.6)
-    data = []
-    for p in recs:
-        avg_rating = Rating.objects.filter(product=p).aggregate(
-            Avg("rating")
-        )["rating__avg"] or 0
-        data.append({
-            'id': p.id,
-            'name': p.name,
-            'description': p.description,
-            'price': str(p.price) if p.price else None,
-            'image_url': p.image_url,
-            'source': p.source,
-            'product_url': p.product_url,
-            'avg_rating': round(avg_rating, 1),
+    """
+    GET /api/products/<id>/recommendations/
+    Returns internal + external recommendations
+    """
+    recs = get_hybrid_recommendations(
+        user_id=request.user.id if request.user.is_authenticated else None,
+        product_id=product_id,
+        top_n=6,
+    )
+
+    internal = []
+    for p in recs["internal"]:
+        internal.append({
+            "id": p.id,
+            "name": p.name,
+            "description": p.description,
+            "price": str(p.price) if p.price else None,
+            "image_url": p.image_url,
+            "source": p.source,
+            "product_url": p.product_url,
+            "avg_rating": getattr(p, "avg_rating", 0),
         })
-    return JsonResponse({'recommendations': data})
+
+    external = recs["external"]
+
+    return JsonResponse({
+        "internal_recommendations": internal,
+        "external_recommendations": external,
+    })
+
+    # -------------------
+    # External products (from APIs)
+    # Already returned as dicts
+    # -------------------
+    external_data = recs["external"]
+
+    return JsonResponse({
+        "internal_recommendations": internal_data,
+        "external_recommendations": external_data,
+    })
 
 
 @csrf_exempt

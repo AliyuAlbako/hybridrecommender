@@ -1,13 +1,15 @@
+// src/components/ProductDetail.jsx
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import api from "../api";
 import ProductCard from "./ProductCard";
-import StarRating from "./StarRating"; // ⭐ Import star rating component
+import StarRating from "./StarRating";
 
 export default function ProductDetail() {
   const { id } = useParams();
   const [product, setProduct] = useState(null);
-  const [recommendations, setRecommendations] = useState([]);
+  const [internalRecs, setInternalRecs] = useState([]);
+  const [externalRecs, setExternalRecs] = useState([]);
   const [rating, setRating] = useState("");
 
   useEffect(() => {
@@ -29,7 +31,8 @@ export default function ProductDetail() {
   async function fetchRecommendations() {
     try {
       const res = await api.get(`/api/products/${id}/recommendations/`);
-      setRecommendations(res.data.recommendations || res.data);
+      setInternalRecs(res.data.internal_recommendations || []);
+      setExternalRecs(res.data.external_recommendations || []);
     } catch (err) {
       console.error("Recs error", err);
     }
@@ -39,11 +42,9 @@ export default function ProductDetail() {
     try {
       await api.post(`/api/products/${id}/interact/`, {
         interaction_type: "view",
-        value: 1.0
+        value: 1.0,
       });
-    } catch (err) {
-      // ignore failure
-    }
+    } catch (err) {}
   }
 
   async function submitRating() {
@@ -73,11 +74,13 @@ export default function ProductDetail() {
           <p className="detail-description">{product.description}</p>
           <p className="price">₦{product.price}</p>
 
-          {/* ⭐ Show average rating */}
+          {/* ⭐ Average rating */}
           <div className="rating-display">
             <StarRating rating={product.avg_rating || 0} />
             <span className="rating-text">
-              {product.avg_rating ? product.avg_rating.toFixed(1) : "No ratings yet"}
+              {product.avg_rating
+                ? product.avg_rating.toFixed(1)
+                : "No ratings yet"}
             </span>
           </div>
 
@@ -98,11 +101,49 @@ export default function ProductDetail() {
 
       <hr />
 
-      <h3>Recommended products</h3>
+      {/* Internal recommendations */}
+      <h3>Recommended from our store</h3>
       <div className="card-container">
-        {recommendations.length
-          ? recommendations.map((rec) => <ProductCard key={rec.id} product={rec} />)
-          : <p>No recommendations.</p>}
+        {internalRecs.length ? (
+          internalRecs.map((rec) => (
+            <ProductCard key={rec.id} product={rec} />
+          ))
+        ) : (
+          <p>No internal recommendations.</p>
+        )}
+      </div>
+
+      <hr />
+
+      {/* External recommendations */}
+      <h3>Related products from other platforms</h3>
+      <div className="card-container">
+        {externalRecs.length ? (
+          externalRecs.map((rec, idx) => (
+            <div key={idx} className="card external-card">
+              <img
+                src={rec.image_url}
+                alt={rec.name}
+                className="product--image"
+              />
+              <h4>{rec.name}</h4>
+              <p className="price">{rec.price}</p>
+              <p style={{ fontSize: "12px", color: "#666" }}>
+                Source: {rec.platform}
+              </p>
+              <a
+                href={rec.url}
+                target="_blank"
+                rel="noreferrer"
+                className="card-button"
+              >
+                View on {rec.platform}
+              </a>
+            </div>
+          ))
+        ) : (
+          <p>No external recommendations.</p>
+        )}
       </div>
     </div>
   );

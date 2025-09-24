@@ -4,7 +4,7 @@ from . import views
 from django.urls import path
 
 from .order_views import OrderListView
-from .views_auth import RegisterView, LoginView
+from .views_auth import RegisterView, LoginView, UserProfileView
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 from . import api_views
 from django.urls import path
@@ -17,7 +17,7 @@ urlpatterns = [
 
 # Auth
     path("register/", RegisterView.as_view(), name="register"),
-    path("profile/", api_views.profile, name="profile"),
+    path("profile/", UserProfileView.as_view(), name="profile"),
     path("token/", TokenObtainPairView.as_view(), name="token_obtain_pair"),
     path("token/refresh/", TokenRefreshView.as_view(), name="token_refresh"),
     path("login/", LoginView.as_view(), name="login"),

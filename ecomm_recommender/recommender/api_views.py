@@ -4,6 +4,7 @@ from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.response import Response
 from django.shortcuts import get_object_or_404
 
+from .evaluate import run_all_evaluations
 from .recommendation.hybrid import get_hybrid_recommendations
 from .models import Product, UserInteraction, Rating
 from .serializers import (
@@ -93,3 +94,12 @@ def product_recommendations(request, pk):
         "internal_recommendations": internal,
         "external_recommendations": external,
     })
+@api_view(["GET"])
+@permission_classes([AllowAny])
+def evaluate_system(request):
+    """
+    API endpoint: GET /api/evaluate/
+    Returns recommendation system evaluation metrics
+    """
+    results = run_all_evaluations()
+    return Response(results)

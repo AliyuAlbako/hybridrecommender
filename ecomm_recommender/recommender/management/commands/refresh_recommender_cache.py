@@ -3,7 +3,7 @@ import time, random
 from django.core.management.base import BaseCommand
 from ....recommender.recommendation.cache_utils import clear_cache
 from ....recommender.recommendation.content_based import build_content_model
-from ....recommender.recommendation.collaborative import build_collaborative_model
+# from ....recommender.recommendation.collaborative import build_collaborative_model
 from django.conf import settings
 import os
 

@@ -146,6 +146,7 @@ export default function ProductDetail() {
           <p>No external recommendations.</p>
         )}
       </div>
+
     </div>
   );
 }

@@ -1,30 +1,20 @@
 # recommender/recommendation/hybrid.py
 
-from ..models import Product, UserProfile, Rating, UserInteraction
+from ..models import Product, UserProfile, UserInteraction
 from django.db.models import Q
-import requests
-
-
-def fetch_from_jumia(category_or_keyword):
-    """
-    Fetch external products from Jumia.
-    (Currently mocked because Jumia doesn’t provide open API)
-    """
-    # Example: in real case you would send request to a scraping microservice or API
-    # For now, return mocked results
-    return [
-        {
-            "platform": "Jumia",
-            "name": "Easypie 20000mAh Power Bank",
-            "price": "₦15,000",
-            "url": "https://www.jumia.com.ng/easypie-easypie-20000mah-dual-fast-charge-64w-type-c-and-micro-usb-portable-power-bank-404295118.html",
-            "image_url": "https://ng.jumia.is/unsafe/fit-in/500x500/filters:fill(white)/product/18/592404/1.jpg",
-        }
-    ]
+from .external_scraper import scrape_jumia, scrape_konga, scrape_amazon  # ✅ real Jumia scraper
 
 
 def fetch_from_konga(category_or_keyword):
-    """Mock Konga recommendations"""
+    """Try scraping Konga, fallback to mocked product if fails."""
+    try:
+        results = scrape_konga(category_or_keyword)
+        if results and isinstance(results, list):
+            return results
+    except Exception as e:
+        print("⚠️ Konga scrape failed:", e)
+
+    # --- fallback ---
     return [
         {
             "platform": "Konga",
@@ -37,7 +27,15 @@ def fetch_from_konga(category_or_keyword):
 
 
 def fetch_from_amazon(category_or_keyword):
-    """Mock Amazon recommendations"""
+    """Try scraping Amazon, fallback to mocked product if fails."""
+    try:
+        results = scrape_amazon(category_or_keyword)
+        if results and isinstance(results, list):
+            return results
+    except Exception as e:
+        print("⚠️ Amazon scrape failed:", e)
+
+    # --- fallback ---
     return [
         {
             "platform": "Amazon",
@@ -54,7 +52,7 @@ def get_hybrid_recommendations(user_id=None, product_id=None, top_n=10, alpha=0.
     Hybrid recommendations:
     - Internal DB recommendations
     - Personalized by hobby/interest
-    - External products from Jumia, Konga, Amazon
+    - External products from Jumia (real), Konga (mock), Amazon (mock)
     """
 
     products = Product.objects.all()
@@ -71,13 +69,16 @@ def get_hybrid_recommendations(user_id=None, product_id=None, top_n=10, alpha=0.
             Q(description__icontains=target.name)
         )
     else:
+        target = None
         content_based = products
 
     collaborative_ids = []
     if product_id:
         interactions = UserInteraction.objects.filter(product_id=product_id)
         user_ids = interactions.values_list("user_id", flat=True)
-        collaborative_ids = UserInteraction.objects.filter(user_id__in=user_ids).values_list("product_id", flat=True)
+        collaborative_ids = UserInteraction.objects.filter(
+            user_id__in=user_ids
+        ).values_list("product_id", flat=True)
 
     collaborative = products.filter(id__in=collaborative_ids)
 
@@ -88,7 +89,7 @@ def get_hybrid_recommendations(user_id=None, product_id=None, top_n=10, alpha=0.
             profile = UserProfile.objects.get(user_id=user_id)
             hobby = profile.hobby or ""
             interest = profile.interest or ""
-            keyword = interest or hobby  # use for external fetch
+            keyword = interest or hobby  # keyword for external fetch
 
             personal = products.filter(
                 Q(category__icontains=hobby) |
@@ -99,6 +100,7 @@ def get_hybrid_recommendations(user_id=None, product_id=None, top_n=10, alpha=0.
         except UserProfile.DoesNotExist:
             personal = []
 
+    # Deduplicate internal
     combined = list(content_based) + list(collaborative) + list(personal)
     seen = set()
     final_internal = []
@@ -112,10 +114,15 @@ def get_hybrid_recommendations(user_id=None, product_id=None, top_n=10, alpha=0.
     # -----------------------
     # External recommendations
     # -----------------------
-    keyword = keyword or (target.category if product_id else "electronics")
+    keyword = keyword or (target.category if target else "electronics")
 
     external = []
-    external += fetch_from_jumia(keyword)
+    try:
+        external += scrape_jumia(keyword)  # ✅ real scraping
+    except Exception as e:
+        print("Jumia scrape failed:", e)
+
+    # Keep mocks for now
     external += fetch_from_konga(keyword)
     external += fetch_from_amazon(keyword)
 

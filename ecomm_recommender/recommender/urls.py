@@ -40,5 +40,8 @@ urlpatterns = [
     path("cart/checkout/", CheckoutView.as_view(), name="cart_checkout"),
     # order url
     path("orders/", OrderListView.as_view(), name="orders"),
+    # evaluate url
+    path("evaluate/", api_views.evaluate_system, name="evaluate_system"),
+
 
 ]

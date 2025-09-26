@@ -57,11 +57,12 @@ class ProductSerializer(serializers.ModelSerializer):
         extra_fields = ["avg_rating", "rating_count"]
 
     def get_avg_rating(self, obj):
-        avg = obj.ratings.aggregate(avg=Avg("rating"))["avg"]
+        avg = obj.rating_set.aggregate(avg=Avg("rating"))["avg"]
+
         return round(avg, 1) if avg else 0.0
 
     def get_rating_count(self, obj):
-        return obj.ratings.count()
+        return obj.rating_set.count()
 
 
 class RatingSerializer(serializers.ModelSerializer):

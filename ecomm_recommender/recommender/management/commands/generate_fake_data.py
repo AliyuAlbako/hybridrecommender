@@ -1,66 +1,44 @@
 import random
 from django.core.management.base import BaseCommand
 from django.contrib.auth.models import User
-from recommender.models import Product, UserInteraction, Rating
+from ...models import Product, UserInteraction, Rating
 
 class Command(BaseCommand):
-    help = "Generate synthetic users, products, and interactions for testing hybrid recommender"
-
-    def add_arguments(self, parser):
-        parser.add_argument("--users", type=int, default=100, help="Number of fake users to create")
-        parser.add_argument("--interactions", type=int, default=20, help="Number of interactions per user")
-        parser.add_argument("--products", type=int, default=50, help="Number of products to ensure in DB")
+    help = "Generate synthetic users, ratings, and interactions for testing the recommender"
 
     def handle(self, *args, **options):
-        num_users = options["users"]
-        num_interactions = options["interactions"]
-        num_products = options["products"]
+        self.stdout.write("Generating fake users, ratings, and interactions...")
 
-        # Step 1: Create products if not enough
-        if Product.objects.count() < num_products:
-            for i in range(num_products - Product.objects.count()):
-                Product.objects.create(
-                    name=f"Sample Product {i+1}",
-                    category=random.choice(["Electronics", "Books", "Clothing", "Shoes"]),
-                    description=f"This is a sample description for product {i+1}.",
-                    price=random.uniform(5.0, 200.0),
-                    image_url="https://via.placeholder.com/150",
-                    source="MockStore",
-                    product_url="https://example.com/product"
-                )
-            self.stdout.write(self.style.SUCCESS(f"Added {num_products} products."))
+        # Create users if not exist
+        for i in range(1, 101):
+            username = f"user{i}"
+            if not User.objects.filter(username=username).exists():
+                User.objects.create_user(username=username, password="test1234")
 
+        users = User.objects.all()
         products = list(Product.objects.all())
 
-        # Step 2: Create users
-        for i in range(num_users):
-            username = f"user{i+1}"
-            user, created = User.objects.get_or_create(username=username)
-            if created:
-                user.set_password("password123")
-                user.save()
+        if not products:
+            self.stdout.write(self.style.ERROR("⚠️ No products in DB! Please add products first."))
+            return
 
-            # Step 3: Add random interactions
-            for _ in range(num_interactions):
+        for user in users:
+            for _ in range(30):  # 30 random interactions
                 product = random.choice(products)
-                interaction_type = random.choice(["view", "like", "buy"])
-                value = {"view": 1.0, "like": 2.0, "buy": 3.0}[interaction_type]
 
+                # Interaction
                 UserInteraction.objects.create(
                     user=user,
                     product=product,
-                    interaction_type=interaction_type,
-                    value=value
+                    interaction_type=random.choice(["view", "like", "buy"]),
+                    value=random.uniform(0.5, 1.5),
                 )
 
-                # Optional rating
-                if interaction_type in ["like", "buy"]:
-                    Rating.objects.update_or_create(
-                        user=user,
-                        product=product,
-                        defaults={"rating": random.randint(3, 5)}
-                    )
+                # Rating (1–5 scale)
+                Rating.objects.update_or_create(
+                    user=user,
+                    product=product,
+                    defaults={"rating": random.randint(1, 5)},
+                )
 
-        self.stdout.write(self.style.SUCCESS(
-            f"✅ Created {num_users} users, each with {num_interactions} interactions."
-        ))
+        self.stdout.write(self.style.SUCCESS("✅ Fake data generated successfully!"))

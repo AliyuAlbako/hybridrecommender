@@ -1,7 +1,7 @@
 import json
 import os
 from django.core.management.base import BaseCommand
-from recommender.models import Product
+from ....recommender.models import Product
 
 class Command(BaseCommand):
     help = "Seed the database with products from a JSON file"

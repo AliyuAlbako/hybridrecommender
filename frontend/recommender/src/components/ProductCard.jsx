@@ -33,7 +33,7 @@ export default function ProductCard({ product }) {
         {product.description?.substring(0, 90)}
         {product.description?.length > 90 ? "..." : ""}
       </p>
-      <p className="price">${product.price}</p>
+      <p className="price">₦{product.price}</p>
 
       <div style={{ display: "flex", gap: "10px" }}>
         <Link to={`/product/${product.id}`} className="card-button">

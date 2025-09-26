@@ -26,11 +26,12 @@ SECRET_KEY = 'django-insecure-h_dz-t(o-lh%gjw59bw_78%b=7)92(4ly_iyfkjxx0rr35i)(q
 DEBUG = True
 
 ALLOWED_HOSTS = ['*']
-ALLOWED_HOSTS = ['hybridrecommender.onrender.com', 'localhost', '127.0.0.1']
+# ALLOWED_HOSTS = ['hybridrecommender.onrender.com', 'localhost', '127.0.0.1', 'https://hybridrecommender2.onrender.com/]
 
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:5173",   # React dev server
     "http://127.0.0.1:5173",
+    "https://hybridrecommender2.onrender.com"
 ]
 
 

@@ -1,44 +1,79 @@
-import random
+# recommender/management/commands/generate_fake_data.py
 from django.core.management.base import BaseCommand
 from django.contrib.auth.models import User
-from ...models import Product, UserInteraction, Rating
+from ...models import Product, UserInteraction, Rating, UserProfile
+import random
 
 class Command(BaseCommand):
-    help = "Generate synthetic users, ratings, and interactions for testing the recommender"
+    help = "Generate fake products, users, ratings, interactions, and profiles with images"
 
-    def handle(self, *args, **options):
-        self.stdout.write("Generating fake users, ratings, and interactions...")
+    def handle(self, *args, **kwargs):
+        # Sample categories with placeholder images
+        category_images = {
+            "Electronics": "https://picsum.photos/seed/electronics{}/400/400",
+            "Fashion": "https://picsum.photos/seed/fashion{}/400/400",
+            "Books": "https://picsum.photos/seed/books{}/400/400",
+            "Sports": "https://picsum.photos/seed/sports{}/400/400",
+            "Home": "https://picsum.photos/seed/home{}/400/400",
+        }
 
-        # Create users if not exist
-        for i in range(1, 101):
-            username = f"user{i}"
-            if not User.objects.filter(username=username).exists():
-                User.objects.create_user(username=username, password="test1234")
+        categories = list(category_images.keys())
 
-        users = User.objects.all()
-        products = list(Product.objects.all())
+        # Sample hobbies & interests
+        hobbies = ["gaming", "reading", "cooking", "traveling", "fitness"]
+        interests = ["electronics", "fashion", "books", "sports", "home decor"]
 
-        if not products:
-            self.stdout.write(self.style.ERROR("⚠️ No products in DB! Please add products first."))
-            return
+        # Clear existing
+        Product.objects.all().delete()
+        User.objects.exclude(is_superuser=True).delete()
+        UserProfile.objects.all().delete()
 
+        # Create users + profiles
+        users = []
+        for i in range(10):
+            user = User.objects.create_user(
+                username=f"user{i}",
+                email=f"user{i}@test.com",
+                password="password123"
+            )
+            profile = UserProfile.objects.create(
+                user=user,
+                hobby=random.choice(hobbies),
+                interest=random.choice(interests)
+            )
+            users.append(user)
+
+        # Create products with image URLs
+        products = []
+        for i in range(20):
+            category = random.choice(categories)
+            image_url = category_images[category].format(i)
+
+            product = Product.objects.create(
+                name=f"{category} Product {i}",
+                category=category,
+                description=f"This is a sample {category.lower()} product number {i}.",
+                price=round(random.uniform(10, 500), 2),
+                image_url=image_url,
+                source="Internal",
+                product_url=f"https://example.com/product/{i}"
+            )
+            products.append(product)
+
+        # Add interactions + ratings
         for user in users:
-            for _ in range(30):  # 30 random interactions
+            for _ in range(5):  # each user interacts with 5 random products
                 product = random.choice(products)
-
-                # Interaction
                 UserInteraction.objects.create(
                     user=user,
                     product=product,
                     interaction_type=random.choice(["view", "like", "buy"]),
-                    value=random.uniform(0.5, 1.5),
+                    value=random.uniform(0.5, 2.0)
                 )
-
-                # Rating (1–5 scale)
                 Rating.objects.update_or_create(
                     user=user,
                     product=product,
-                    defaults={"rating": random.randint(1, 5)},
+                    defaults={"rating": random.randint(1, 5)}
                 )
 
-        self.stdout.write(self.style.SUCCESS("✅ Fake data generated successfully!"))
+        self.stdout.write(self.style.SUCCESS("Fake data with profiles & images generated successfully!"))

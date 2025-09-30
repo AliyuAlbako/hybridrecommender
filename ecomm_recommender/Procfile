@@ -1,1 +1,2 @@
+release: python manage.py migrate --noinput
 web: gunicorn ecomm_recommender.wsgi:application --log-file -

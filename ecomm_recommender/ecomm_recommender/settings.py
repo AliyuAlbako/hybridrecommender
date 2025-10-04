@@ -104,12 +104,25 @@ WSGI_APPLICATION = 'ecomm_recommender.wsgi.application'
 # }
 
 
+BASE_DIR = Path(__file__).resolve().parent.parent
+
+# ✅ Default SQLite for local dev
 DATABASES = {
-    "default": dj_database_url.config(
-        default=os.environ.get("postgresql://hybridrecommenderdb_user:Wq2KHzDVIKOqFOGZomjhV1QwyGTedfI9@dpg-d3bv417diees738vk5mg-a.oregon-postgres.render.com/hybridrecommenderdb")
-    )
+    "default": {
+        "ENGINE": "django.db.backends.sqlite3",
+        "NAME": BASE_DIR / "db.sqlite3",
+    }
 }
 
+# ✅ Override if DATABASE_URL exists (Render sets this automatically)
+DATABASE_URL = os.environ.get("DATABASE_URL")
+
+if DATABASE_URL:
+    DATABASES["default"] = dj_database_url.config(
+        default=DATABASE_URL.parse,
+        conn_max_age=600,
+        ssl_require=True,
+    )
 
 
 # Password validation

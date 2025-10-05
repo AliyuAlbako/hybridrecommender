@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/5.2/ref/settings/
 import os.path
 from pathlib import Path
 import dj_database_url
+from decouple import config
 # import  os
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -22,10 +23,10 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/5.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-h_dz-t(o-lh%gjw59bw_78%b=7)92(4ly_iyfkjxx0rr35i)(q'
+SECRET_KEY = config('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = config('DEBUG', default=False, cast=bool)
 
 ALLOWED_HOSTS = ['*']
 # ALLOWED_HOSTS = ['hybridrecommender.onrender.com', 'localhost', '127.0.0.1', 'https://hybridrecommender2.onrender.com/]
@@ -96,33 +97,35 @@ WSGI_APPLICATION = 'ecomm_recommender.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
 
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.sqlite3',
-#         'NAME': BASE_DIR / 'db.sqlite3',
-#     }
-# }
-
-
-BASE_DIR = Path(__file__).resolve().parent.parent
-
-# ✅ Default SQLite for local dev
 DATABASES = {
-    "default": {
-        "ENGINE": "django.db.backends.sqlite3",
-        "NAME": BASE_DIR / "db.sqlite3",
+    'default': {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / 'db.sqlite3',
     }
 }
 
-# ✅ Override if DATABASE_URL exists (Render sets this automatically)
-DATABASE_URL = os.environ.get("DATABASE_URL")
+DATABASES['default'] = dj_database_url.parse(config('DATABASE_URL'))
 
-if DATABASE_URL:
-    DATABASES["default"] = dj_database_url.config(
-        default=DATABASE_URL,
-        conn_max_age=600,
-        ssl_require=True,
-    )
+#
+# BASE_DIR = Path(__file__).resolve().parent.parent
+#
+# # ✅ Default SQLite for local dev
+# DATABASES = {
+#     "default": {
+#         "ENGINE": "django.db.backends.sqlite3",
+#         "NAME": BASE_DIR / "db.sqlite3",
+#     }
+# }
+#
+# # ✅ Override if DATABASE_URL exists (Render sets this automatically)
+# DATABASE_URL = os.environ.get("DATABASE_URL")
+#
+# if DATABASE_URL:
+#     DATABASES["default"] = dj_database_url.config(
+#         default=DATABASE_URL,
+#         conn_max_age=600,
+#         ssl_require=True,
+#     )
 
 
 # Password validation

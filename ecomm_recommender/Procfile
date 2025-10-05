@@ -1,2 +1,2 @@
-release: python manage.py migrate --noinput
+release: python manage.py migrate --noinput && python manage.py loaddata products.json && python manage.py loaddata ratings.json && python manage.py loaddata interactions.json
 web: gunicorn ecomm_recommender.wsgi:application --log-file -
